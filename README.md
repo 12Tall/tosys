@@ -15,6 +15,8 @@ A toy rk4 ODE solver, inspired by State-space equation. 🍭
 
 ## Example  
 
+### 示例一
+
 ```Python
 from tosys import State, System, InputSignal
 """
@@ -42,6 +44,36 @@ sys.draw() # 画图
 ```  
 
 ![](img/exp_01.png)  
+
+### 示例二  
+```python
+from tosys import State, System, InputSignal
+"""
+模拟二阶电路的零状态响应  
+电路图与参数参见: https://blog.csdn.net/qq_38972634/article/details/116405600
+"""
+
+R = 1  # Ohm
+L = 0.25  # H
+C = 1.3333  # F
+ui = 1    # v
+
+""" 
+uc0' = uc1  
+uc1' = uc2 = 3*ui - 3*uc - 4*uc1  
+"""
+
+
+input = InputSignal.heaviside()  # 阶跃信号
+sys = System(0, 10, .001, )
+sys.addState(State("u0", 0, lambda t, state: state['u1']))
+sys.addState(State("u1", 0, lambda t, state: sys.input(t)*3 - 3*state['u0'] - 4*state['u1']))
+
+
+sys.RK4()
+sys.draw()
+```
+![](img/exp_02.png)  
 
 
 因为代码中使用了大量的循环语句，所以效率不算太高。但是计算能力还算强大：可以求常见的微分方程（组）的解，也可用于计算控制系统各状态变量的时域变化情况。  

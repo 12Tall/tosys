@@ -63,12 +63,11 @@ uc0' = uc1
 uc1' = uc2 = 3*ui - 3*uc - 4*uc1  
 """
 
-
-input = InputSignal.heaviside()  # 阶跃信号
-sys = System(0, 10, .001, input)
+heaviside = InputSignal.heaviside()  # 阶跃信号
+delay = InputSignal.delay(2)  # 延时两秒
+sys = System(0, 10, .001, input = lambda t: heaviside(delay(t)))
 sys.addState(State("u0", 0, lambda t, state: state['u1']))
 sys.addState(State("u1", 0, lambda t, state: sys.input(t)*3 - 3*state['u0'] - 4*state['u1']))
-
 
 sys.RK4()
 sys.draw()

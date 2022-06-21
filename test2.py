@@ -7,7 +7,7 @@ from tosys import State, System, InputSignal
 R = 1  # Ohm
 L = 0.25  # H
 C = 1.3333  # F
-ui = 1    # v
+# ui = 1(t-2)    # v
 
 """ 
 uc0' = uc1  
@@ -15,8 +15,9 @@ uc1' = uc2 = 3*ui - 3*uc - 4*uc1
 """
 
 
-input = InputSignal.heaviside()  # 阶跃信号
-sys = System(0, 10, .001, input)
+heaviside = InputSignal.heaviside()  # 阶跃信号
+delay = InputSignal.delay(2)
+sys = System(0, 10, .001, input = lambda t: heaviside(delay(t)))
 sys.addState(State("u0", 0, lambda t, state: state['u1']))
 sys.addState(State("u1", 0, lambda t, state: sys.input(t)*3 - 3*state['u0'] - 4*state['u1']))
 

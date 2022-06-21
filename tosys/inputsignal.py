@@ -49,7 +49,7 @@ class InputSignal():
 
         def h(t):
             nonlocal _flag
-            if _flag and (t < 0):
+            if _flag and (t <= 0):
                 return 0
             else:
                 _flag = False

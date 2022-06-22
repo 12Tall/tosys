@@ -1,5 +1,6 @@
 
-from math import cos, sin
+from cmath import e
+from math import cos, inf, sin
 
 
 class InputSignal():
@@ -97,10 +98,44 @@ class InputSignal():
         """
         方波信号: 
         """
-
         def wave(t):
-            if int(t/width)%2 ==0:  
+            if t > 0 and int(t/width) % 2 == 0:
                 return 1
             else:
                 return 0
         return wave
+
+    def posPID(Kp=1, Ki=0, Kd=0, limit=None):
+        """
+        位置式pid: 
+        """
+        P, I, D, L = Kp, Ki, Kd, limit
+        int_err, lerr = 0, 0
+
+        def pid(err):
+            nonlocal int_err, lerr
+            int_err += err
+            output = P*err + I*int_err + D*(err - lerr)
+            lerr = err
+            if limit != None and output > limit:
+                return limit
+            return output
+        return pid
+
+    def incPID(Kp=1, Ki=0, Kd=0, limit=None):
+        """
+        增量式pid: 
+        """
+        P, I, D, L = Kp, Ki, Kd, limit
+        lerr, llerr, output = 0, 0, 0
+
+        def pid(err):
+            nonlocal llerr, lerr, output
+            doutput = P*(err - lerr) + I*err + D*(err - 2*lerr + llerr)
+            llerr = lerr
+            lerr = err
+            output += doutput
+            if limit != None and output > limit:
+                output = limit
+            return output
+        return pid

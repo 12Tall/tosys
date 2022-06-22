@@ -4,13 +4,14 @@ A toy rk4 ODE solver, inspired by State-space equation. 🍭
 
 ## InputSignal  
 输入信号已包含：  
-- `constant`: 常数信号`f(t) = 1`
-- `sin`: 正弦信号`f(t) = A*sin(omega*t+phi)`
-- `dirac`: 单位冲激函数`f(t) = delta(t)`
-- `delay`: 延时函数`f(t) = g(t-t0)`
-- `diff`:  微分函数`f(t) = g'(t)`
-- `int`: 积分函数` f(t) = H(t)`
-- `squre`: 方波信号
+- [x] `constant`: 常数信号`f(t) = 1`
+- [x] `sin`: 正弦信号`f(t) = A*sin(omega*t+phi)`
+- [x] `dirac`: 单位冲激函数`f(t) = delta(t)`
+- [x] `delay`: 延时函数`f(t) = g(t-t0)`
+- [x] `diff`:  微分函数`f(t) = g'(t)`
+- [x] `int`: 积分函数` f(t) = H(t)`
+- [x] `squre`: 方波信号  
+- [x] `PID`: 未做验证
 
 
 ## Example  

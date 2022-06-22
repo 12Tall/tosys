@@ -61,7 +61,7 @@ class System():
         dt = self.dt
         ts = numpy.arange(self.start, self.end, dt)  # 时间轴
         input = numpy.reshape(self._input_data,(-1,4))[:,0]
-        print(input)
+        # print(input)
         plt.plot(ts, input, label='input')
 
         j = 0

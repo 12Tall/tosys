@@ -105,7 +105,33 @@ class InputSignal():
                 return 0
         return wave
 
-    def posPID(Kp=1, Ki=0, Kd=0, limit=None):
+    def pwm(dt=0.001, period=1):
+        """
+        PWM信号: 因为4阶龙格-库塔的原因，所以pwm 的采样周期成了预期的四分之一
+        """
+        _duty, counter = 0, 0
+        period = period*4
+
+        def wave(duty=0.5):
+            nonlocal _duty, counter
+
+            output = 0
+            if counter >= period:
+                counter = 0
+                _duty = duty*period
+                # print(">>>>>", counter, period, _duty, duty, period*duty)
+
+            if counter < _duty:
+                output = 1
+            else:
+                output = 0
+            counter += dt
+
+            # print(counter, period, _duty, duty, period*duty)
+            return output
+        return wave
+
+    def posPID(dt=0.001, Kp=1, Ki=0, Kd=0, limit=None):
         """
         位置式pid: 
         """
@@ -115,14 +141,14 @@ class InputSignal():
         def pid(err):
             nonlocal int_err, lerr
             int_err += err
-            output = P*err + I*int_err + D*(err - lerr)
+            output = P*err + I*int_err*dt + D*(err - lerr)
             lerr = err
             if limit != None and output > limit:
                 return limit
             return output
         return pid
 
-    def incPID(Kp=1, Ki=0, Kd=0, limit=None):
+    def incPID(dt=0.001, Kp=1, Ki=0, Kd=0, limit=None):
         """
         增量式pid: 
         """
@@ -131,7 +157,7 @@ class InputSignal():
 
         def pid(err):
             nonlocal llerr, lerr, output
-            doutput = P*(err - lerr) + I*err + D*(err - 2*lerr + llerr)
+            doutput = P*(err - lerr) + I*err*dt + D*(err - 2*lerr + llerr)
             llerr = lerr
             lerr = err
             output += doutput

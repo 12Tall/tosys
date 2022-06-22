@@ -11,8 +11,10 @@ A toy rk4 ODE solver, inspired by State-space equation. 🍭
 - [x] `diff`:  微分函数`f(t) = g'(t)`
 - [x] `int`: 积分函数` f(t) = H(t)`
 - [x] `squre`: 方波信号  
-- [x] `PID`: 未做验证
+- [ ] `PID`: 未做验证  
+- [ ] `PWM`: 未做详细验证  
 
+需要注意的是，RK4 算法会多调用信号函数4 倍，如果信号函数内有积分或者累加运算，需要额外注意！
 
 ## Example  
 
@@ -74,6 +76,23 @@ sys.RK4()
 sys.draw()
 ```
 ![](img/exp_02.png)  
+
+### 示例三  
+```python
+"""
+在示例二的基础上测试PWM 输入信号
+"""
+
+# ...  
+
+sint = InputSignal.sin(omega=1)  # 正弦信号
+pwm = InputSignal.pwm(dt=0.001,period=0.25)  # PWM 波形，输入信号为占空比，下面将正弦信号作为输入
+delay = InputSignal.delay(2)
+sys = System(0, 20, .001, input=lambda t: pwm(sint(delay(t)) ))
+
+# ...  
+```
+![](img/exp_03.png)  
 
 
 因为代码中使用了大量的循环语句，所以效率不算太高。但是计算能力还算强大：可以求常见的微分方程（组）的解，也可用于计算控制系统各状态变量的时域变化情况。  

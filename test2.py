@@ -14,11 +14,10 @@ uc0' = uc1
 uc1' = uc2 = 3*ui - 3*uc - 4*uc1  
 """
 
-
-squre = InputSignal.squre(0.1)  # 方波信号
-sint = InputSignal.sin()  # 方波信号
+sint = InputSignal.sin(omega=1)  # 正弦信号
+pwm = InputSignal.pwm(dt=0.001,period=0.25)  # PWM 波形，输入信号为占空比，下面将正弦信号作为输入
 delay = InputSignal.delay(2)
-sys = System(0, 10, .001, input=lambda t: sint(delay(t)) * squre(delay(t)))
+sys = System(0, 20, .001, input=lambda t: pwm(sint(delay(t)) ))
 sys.addState(State("u0", 0, lambda t, state: state['u1']))
 sys.addState(State("u1", 0, lambda t, state: sys.input(t)
                    * 3 - 3*state['u0'] - 4*state['u1']))
